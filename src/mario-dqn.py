@@ -7,8 +7,6 @@ from rl_coach.graph_managers.graph_manager import ScheduleParameters
 from rl_coach.memories.memory import MemoryGranularity
 from rl_coach.schedules import LinearSchedule
 
-import nes_py
-
 ####################
 # Graph Scheduling #
 ####################

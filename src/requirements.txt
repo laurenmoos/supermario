@@ -1,0 +1,2 @@
+-i https://pypi.org/simple
+nes_py==8.1.6
