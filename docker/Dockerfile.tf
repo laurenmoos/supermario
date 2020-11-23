@@ -18,16 +18,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip install --no-cache-dir \
     PyOpenGL==3.1.0 \
     pyglet==1.3.2 \
-    gym==0.12.5 \
+    gym==0.17.3 \
     rl-coach-slim==1.0.0 && \
     pip install --no-cache-dir --upgrade sagemaker-containers && \
     pip install --upgrade numpy \
     pip install -U cmake \
     pip install --upgrade pip \
-    pip install gym \
     pip install nes-py
 
 WORKDIR /opt/ml
 
 # Starts framework
 ENTRYPOINT ["bash", "-m", "start.sh"]
+
+# Patch Intel coach
+COPY ./src/rl_coach.patch /opt/amazon/rl_coach.patch
+RUN patch -p1 -N --directory=/usr/local/lib/python3.6/dist-packages/ < /opt/amazon/rl_coach.patch
