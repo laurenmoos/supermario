@@ -12,7 +12,7 @@ from rl_coach.schedules import LinearSchedule
 ####################
 
 schedule_params = ScheduleParameters()
-schedule_params.improve_steps = TrainingSteps(10000000000)
+schedule_params.improve_steps = TrainingSteps(50000)
 schedule_params.steps_between_evaluation_periods = EnvironmentEpisodes(10)
 schedule_params.evaluation_steps = EnvironmentEpisodes(1)
 schedule_params.heatup_steps = EnvironmentSteps(1000)
@@ -41,7 +41,7 @@ agent_params.exploration.epsilon_schedule = LinearSchedule(1.0, 0.01, 10000)
 #  Environment #
 ################
 env_params = GymVectorEnvironment()
-env_params.level = "env.super_mario.gym_super_mario_bros.smb_env:SuperMarioBrosEnv"
+env_params.level = "env.gym_super_mario_bros.smb_env:SuperMarioBrosEnv"
 
 #################
 # Visualization #
