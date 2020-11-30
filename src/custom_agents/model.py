@@ -48,7 +48,7 @@ def create_feature_vector(input_shape):
 class HyperParameters:
     DEFAULT_BETA = 0.01
     DEFAULT_LMBD = 0.99
-    BATCH_S IZE = 10
+    BATCH_SIZE = 10
 
     DEFAULT_GAMES = 1000
     DEFAULT_GAME_STEPS = 100

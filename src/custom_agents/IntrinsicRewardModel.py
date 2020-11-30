@@ -5,6 +5,8 @@ from tensorflow.python.keras.layers import Reshape, Lambda
 from tensorflow.python.keras.optimizers import Adam
 from model import inverse_net, forward_model, create_feature_vector, one_hot_encode_action
 
+from baselines import logger
+
 
 class IntrinsicRewardModel:
     """
@@ -62,9 +64,6 @@ class IntrinsicRewardModel:
 
         # Instrumentation
 
-        self.positions = np.zeros((self.training_games, 2))  # record actions
-        self.rewards = np.zeros(self.training_games)  # record rewards
-
     def _build_icm_model(self, state_shape=(2,), action_shape=(3,)):
         """
         Ths function:
@@ -105,10 +104,12 @@ class IntrinsicRewardModel:
                           output_shape=(1,))([a_t, a_t_hat])
 
         # combined model loss
+
         # beta weighs the inverse loss against the rwd (generate from the forward model)
         loss = Lambda(lambda x: self.beta * x[0] + (1.0 - self.beta) * x[1], output_shape=(1,))([int_reward, inv_loss])
 
         # combined model loss
+
         # lmd is lambda, the param the weights the importance of the policy gradient loss against the intrinsic reward
         rwd = Input(shape=(1,))
         loss = Lambda(lambda x: (-self.lmd * x[0] + x[1]), output_shape=(1,))([rwd, loss])
@@ -139,6 +140,9 @@ class IntrinsicRewardModel:
         return chosen_action
 
     def learn(self, prev_states, states, actions, rewards):
+        """
+        Batch trains the network and logs loss.
+        """
         # batch train the network
         s_t = prev_states
         s_t1 = states
@@ -147,6 +151,7 @@ class IntrinsicRewardModel:
 
         icm_loss = self.model.train_on_batch([s_t, s_t1, np.array(actions), np.array(rewards).reshape((-1, 1))],
                                              np.zeros((self.batch_size,)))
+        logger.logkv('InternalCuriosityModelLoss', icm_loss)
 
     def get_intrinsic_reward(self, x):
         # x -> [prev_state, state, action]
